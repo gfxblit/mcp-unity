@@ -68,9 +68,9 @@ export class Logger {
     // Write to console if logging is enabled
     if (this.isLoggingEnabled()) {
       if (data) {
-        console.log(logMessage, data);
+        console.error(logMessage, data);
       } else {
-        console.log(logMessage);
+        console.error(logMessage);
       }
     }
   }

@@ -332,7 +332,7 @@ namespace McpUnity.Unity
 
         /// <summary>
         /// Handles changes in Unity Editor's play mode state.
-        /// Stops the server when exiting Edit Mode if configured, and restarts it when entering Play Mode or returning to Edit Mode if auto-start is enabled.
+        /// Only stops the server when Domain Reload is enabled. When Domain Reload is disabled, the server continues running during Play Mode.
         /// </summary>
         /// <param name="state">The current play mode state change.</param>
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -340,18 +340,26 @@ namespace McpUnity.Unity
             switch (state)
             {
                 case PlayModeStateChange.ExitingEditMode:
-                    // About to enter Play Mode
-                    if (Instance.IsListening)
+                    // About to enter Play Mode - only stop server if Domain Reload is enabled
+                    bool shouldStopServer = !EditorSettings.enterPlayModeOptionsEnabled || 
+                                          !EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload);
+                    
+                    if (Instance.IsListening && shouldStopServer)
                     {
+                        McpLogger.LogInfo("Stopping server due to Domain Reload being enabled");
                         Instance.StopServer();
+                    }
+                    else if (Instance.IsListening)
+                    {
+                        McpLogger.LogInfo("Keeping server running during Play Mode (Domain Reload disabled)");
                     }
                     break;
                 case PlayModeStateChange.EnteredPlayMode:
                 case PlayModeStateChange.ExitingPlayMode:
-                    // Server is disabled during play mode as domain reload will be triggered again when stopped.
+                    // Server remains running when Domain Reload is disabled
                     break;
                 case PlayModeStateChange.EnteredEditMode:
-                    // Returned to Edit Mode
+                    // Returned to Edit Mode - restart server if needed
                     if (!Instance.IsListening && McpUnitySettings.Instance.AutoStartServer)
                     {
                         Instance.StartServer();

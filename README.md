@@ -78,6 +78,8 @@ The following tools are available for manipulating and querying Unity scenes and
 
 - `run_tests`: Runs tests using the Unity Test Runner
   > **Example prompt:** "Run all the EditMode tests in my project"
+  > 
+  > **⚠️ Important for PlayMode tests:** You must disable Domain Reload in Unity's Enter Play Mode Settings for PlayMode tests to work via MCP. See [FAQ section](#frequently-asked-questions) for details.
 
 - `send_console_log`: Send a console log to Unity
   > **Example prompt:** "Send a console log to Unity Editor"
@@ -435,8 +437,26 @@ Error:
 Connection failed: Unknown error
 ```
 
-This error occurs because the bridge connection is lost when the domain reloads upon switching to Play Mode.  
-The workaround is to turn off **Reload Domain** in **Edit > Project Settings > Editor > "Enter Play Mode Settings"**.
+**This error occurs because the MCP connection is lost when Unity reloads the domain upon switching to Play Mode.**
+
+### Solution: Disable Domain Reload
+
+**To enable PlayMode tests via MCP, you must configure Unity's Enter Play Mode Settings:**
+
+1. In Unity Editor, go to **Edit > Project Settings > Editor**
+2. Find the **"Enter Play Mode Settings"** section
+3. **Enable** the checkbox for **"Enter Play Mode Options"**
+4. **Disable** the checkbox for **"Reload Domain"** 
+5. Optionally disable **"Reload Scene"** for even faster testing
+
+![Unity Play Mode Settings](https://docs.unity3d.com/uploads/Main/EnterPlayModeOptions.png)
+
+**Why this is needed:**
+- When Domain Reload is enabled, Unity stops all connections when entering Play Mode
+- The MCP WebSocket connection is closed, causing tests to fail
+- With Domain Reload disabled, the MCP connection remains active during Play Mode tests
+
+**Note:** Disabling Domain Reload also improves Play Mode iteration speed significantly.
 
 </details>
 
