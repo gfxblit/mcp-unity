@@ -47,12 +47,12 @@ RUN chown -R nodejs:nodejs /app
 # Switch to non-root user
 USER nodejs
 
-# Expose WebSocket port
-EXPOSE 8090
+# Expose WebSocket and HTTP ports
+EXPOSE 8090 3000
 
 # Health check to ensure the application is running
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8090/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
 # Command to run the MCP server
 ENTRYPOINT ["node", "build/index.js"]
