@@ -17,6 +17,7 @@ namespace McpUnity.Services
         private static readonly Dictionary<string, HashSet<string>> LogTypeMapping = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase)
         {
             { "info", new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Log" } },
+            { "warning", new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Warning" } },
             { "error", new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Error", "Exception", "Assert" } }
         };
         

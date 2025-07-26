@@ -249,6 +249,10 @@ namespace McpUnity.Unity
             // Register AddAssetToSceneTool
             AddAssetToSceneTool addAssetToSceneTool = new AddAssetToSceneTool();
             _tools.Add(addAssetToSceneTool.Name, addAssetToSceneTool);
+            
+            // Register GetConsoleLogsTool
+            GetConsoleLogsTool getConsoleLogsTool = new GetConsoleLogsTool(_consoleLogsService);
+            _tools.Add(getConsoleLogsTool.Name, getConsoleLogsTool);
         }
         
         /// <summary>
